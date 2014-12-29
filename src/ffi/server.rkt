@@ -9,20 +9,25 @@
 ; to preserve sanity
 
 ;;; wl_list
-(define-cstruct _wl_list ([prev _wl_list-pointer]
-                          [next _wl_list-pointer]))
+(define-cstruct _wl_list ([prev _wl_list-pointer/null]
+                          [next _wl_list-pointer/null]))
 
 (defwl wl_list_init (_fun _wl_list-pointer -> _void))
 
 ;;; wl_signal
 (define-cstruct _wl_signal ([listener_list _wl_list]))
 
-;; (define (wl_signal_init signal :: _wl_signal-pointer)
-;;   (wl_list_init ()))
+; this function is inlined, so I wrap it here
+(define (wl_signal_init signal :: _wl_signal-pointer)
+  (wl_list_init (wl_signal-listener_list signal)))
+
+;;; wl_event_source
+(define-cpointer-type _wl_event_source-pointer)
+
+(defwl wl_event_source_remove (_fun _wl_event_source-pointer -> _int))
 
 ;;; wl_event_loop
 (define-cpointer-type _wl_event_loop-pointer)
-(define-cpointer-type _wl_event_source-pointer)
 
 (define _wl_event_loop_fd_func_t (_fun _int _uint32 _pointer -> _int))
 (define _wl_event_loop_timer_func_t (_fun _pointer -> _int))
