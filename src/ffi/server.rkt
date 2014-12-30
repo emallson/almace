@@ -1,11 +1,12 @@
 #lang racket/base
 
 (require ffi/unsafe
-         ffi/unsafe/define)
+         ffi/unsafe/define
+         "../drm.rkt")
 
 (define-ffi-definer defwl (ffi-lib "libwayland-server"))
 
-; We do not need to inspect the structs, so we just use the -pointer versions
+; When we do not need to inspect the structs, we just use the -pointer versions
 ; to preserve sanity
 
 ;;; wl_list
@@ -49,3 +50,12 @@
 
 (defwl wl_display_get_event_loop
   (_fun _wl_display-pointer -> _wl_event_loop-pointer))
+
+(provide wl_signal_init
+         wl_event_source_remove
+         wl_event_loop_add_fd
+         wl_display_create
+         wl_display_add_socket
+         wl_display_run
+         wl_display_destroy
+         wl_display_get_event_loop)
